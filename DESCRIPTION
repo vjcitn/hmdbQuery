@@ -1,0 +1,14 @@
+Package: hmdbQuery
+Title: utilities for exploration of human metabolome database
+Description: Define utilities for exploration of human metabolome database.
+Version: 0.99.0
+Author: Vince Carey <stvjc@channing.harvard.edu>
+Suggests: knitr, annotate, gwascat, testthat
+Depends: XML
+Imports: S4Vectors, methods, utils
+Maintainer: VJ Carey <stvjc@channing.harvard.edu>
+License: Artistic-2.0
+LazyLoad: yes
+biocViews: Metabolomics, Infrastructure
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1.9000

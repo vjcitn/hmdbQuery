@@ -1,0 +1,87 @@
+---
+title: "hmdbQuery: working with Human Metabolome Database (hmdb.ca)"
+author: "Vincent J. Carey, stvjc at channing.harvard.edu"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{hmdbQuery: working with Human Metabolome Database (hmdb.ca)}
+output:
+  html_document:
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+  pdf_document:
+    toc: yes
+    number_sections: yes
+---
+
+# Initial remarks
+
+The human metabolomics database (HMDB, http://www.hmdb.ca)
+includes XML documents describing 114000 metabolites.  We will show
+how to manipulate the metadata on metabolites fairly
+flexibly.
+
+```{r setu,echo=FALSE,results="hide"}
+suppressMessages({
+suppressPackageStartupMessages({
+library(hmdbQuery)
+library(gwascat)
+})
+})
+```
+
+# Key utilities of the package
+
+The hmdbQuery package includes a function for querying HMDB
+directly over HTTP:
+
+```{r lk1}
+library(hmdbQuery)
+lk1 = HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/", 
+       id = "HMDB00001")
+```
+The result is parsed and encapsulated in an S4 object
+```{r lk2}
+lk1
+```
+
+The size of the complete import of information about a single metabolite
+suggests that it would not be too convenient to have comprehensive
+information about all HMDB constituents in memory.  The most effective
+approach to managing the metadata will depend upon use cases to be
+developed over the long run.
+
+# Working with the metadata
+
+## Disease associations
+
+Some HMDB metabolites have been mapped to diseases. 
+
+```{r lkdis3}
+diseases(lk1)
+pmids = unlist(diseases(lk1)[1,]$pmids)
+library(annotate)
+pm = pubmed(pmids[1])
+ab = buildPubMedAbst(xmlRoot(pm)[[1]])
+ab
+```
+
+## Biofluid and tissue location metadata
+
+There are arbitrarily many biofluid and tissue associations
+provided for each HMDB entry.  We have direct accessors,
+and by default we capture all metadata, available through
+the `store` method.
+
+```{r lkdee}
+biofluids(lk1)
+tissues(lk1)
+st = store(lk1)
+head(names(st))
+length(names(st))
+sapply(store(lk1)$protein_associations, "[[", "name")
+sapply(store(lk1)$protein_associations, "[[", "gene_name")
+```
+
