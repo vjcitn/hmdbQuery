@@ -19,5 +19,5 @@ extract disease associations
 }
 \examples{
 data(hmdb1)
-disease(hmdb1)
+diseases(hmdb1)
 }
