@@ -2,6 +2,7 @@
 #' @import methods
 #' @import XML
 #' @importFrom S4Vectors DataFrame List
+#' @importClassesFrom S4Vectors character_OR_NULL
 #' @slot metabolite character(1) institutional name of metabolite
 #' @slot id HMDB identifier
 #' @slot diseases S4Vectors DataFrame instance listing associated diseases
@@ -12,11 +13,11 @@
 #' @exportClass HmdbEntry
 setClass("HmdbEntry", representation(metabolite="character", id="character",
    diseases="DataFrame", biofluids="character",
-   tissues="character", store="ANY"))
+   tissues="character_OR_NULL", store="ANY"))
 setMethod("show", "HmdbEntry", function(object) {
 cat(paste("HMDB metabolite metadata for ", object@metabolite, ":\n", sep=""))
 cat(paste("There are ", nrow(object@diseases), " diseases annotated.\n", sep=""))
-cat(paste("Found in ", length(object@biofluids), " biofluids and ", length(object@tissues), " tissues.\n",
+cat(paste("Direct association reported for ", length(object@biofluids), " biofluids and ", length(object@tissues), " tissues.\n",
     sep=""))
 cat("Use diseases(), biofluids(), tissues() for more information.\n")
 })
@@ -44,8 +45,10 @@ cat("Use diseases(), biofluids(), tissues() for more information.\n")
 HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/",
     id = "HMDB00001", keepFull=TRUE) {
   imp = hmxToList(prefix=prefix, id=id)
+  tissues=unname(unlist(imp$tissue_locations))
+  if (tissues == "\n  ") tissues=NULL
   ans = new("HmdbEntry", metabolite=imp$name, id=id,
-        diseases=.hmlistDiseaseDF(imp), tissues=unname(unlist(imp$tissue_locations)),
+        diseases=.hmlistDiseaseDF(imp), tissues=tissues,
         biofluids=unname(unlist(imp$biofluid_locations)))
   if (keepFull) ans@store = imp
   ans

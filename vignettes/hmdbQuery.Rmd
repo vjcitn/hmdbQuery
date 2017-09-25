@@ -53,6 +53,18 @@ information about all HMDB constituents in memory.  The most effective
 approach to managing the metadata will depend upon use cases to be
 developed over the long run.
 
+Note however that this package does provide snapshots
+of certain direct associations derived from all available
+information as of Sept. 23 2017.  Information
+about direct associations reported in the database
+is present in tables `hmdb_disease`,
+`hmdb_gene`, `hmdb_protein`, `hmdb_omim`.  For
+example
+```{r lkta}
+data(hmdb_disease)
+hmdb_disease
+```
+
 # Working with the metadata
 
 ## Disease associations

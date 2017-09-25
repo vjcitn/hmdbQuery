@@ -9,3 +9,11 @@ test_that("query resolves", {
  expect_true(length(tissues(lk1))>1)
  expect_true(length(biofluids(lk1))>2)
 })
+
+context("stored tables")
+
+test_that("stored data are stable", {
+ data(hmdb_disease)
+ expect_true(nrow(hmdb_disease)==75360)
+ expect_true(ncol(hmdb_disease)==3)
+})

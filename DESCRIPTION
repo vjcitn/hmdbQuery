@@ -1,10 +1,10 @@
 Package: hmdbQuery
 Title: utilities for exploration of human metabolome database
 Description: Define utilities for exploration of human metabolome database.
-Version: 0.99.1
+Version: 0.99.3
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Suggests: knitr, annotate, gwascat, testthat
-Depends: XML
+Depends: R (>= 3.3), XML
 Imports: S4Vectors, methods, utils
 Maintainer: VJ Carey <stvjc@channing.harvard.edu>
 License: Artistic-2.0
