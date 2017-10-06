@@ -11,28 +11,31 @@
 #' @slot store contains parsed XML
 #' @note Ontological tagging of diseases and other associated elements should be considered.
 #' @exportClass HmdbEntry
-setClass("HmdbEntry", representation(metabolite="character", id="character",
-   diseases="DataFrame", biofluids="character",
-   tissues="character_OR_NULL", store="ANY"))
+setClass("HmdbEntry", representation(metabolite = "character", id = "character", 
+    diseases = "DataFrame", biofluids = "character", tissues = "character_OR_NULL", 
+    store = "ANY"))
 setMethod("show", "HmdbEntry", function(object) {
-cat(paste("HMDB metabolite metadata for ", object@metabolite, ":\n", sep=""))
-cat(paste("There are ", nrow(object@diseases), " diseases annotated.\n", sep=""))
-cat(paste("Direct association reported for ", length(object@biofluids), " biofluids and ", length(object@tissues), " tissues.\n",
-    sep=""))
-cat("Use diseases(), biofluids(), tissues() for more information.\n")
+    cat("HMDB metabolite metadata for ", object@metabolite, ":\n", sep = "")
+    cat("There are ", nrow(object@diseases), " diseases annotated.\n", sep = "")
+    cat("Direct association reported for ", length(object@biofluids), " biofluids and ", 
+        length(object@tissues), " tissues.\n", sep = "")
+    cat("Use diseases(), biofluids(), tissues() for more information.\n")
 })
 .hmlistDiseaseDF = function(hmlist) {
-  dis = hmlist$diseases
-  if (is.character(dis) && length(dis)==1 && dis == "\n  ") return(DataFrame())
-  dnames = as.character(sapply(dis, "[[", "name"))
-  refl = lapply(dis, function(x) x$references)
-  reflc = sapply(refl,class)
-  badrefl = which(reflc == "character") # known failure
-  if (length(badrefl)>0) {
-     for (i in badrefl) refl[[i]] = list(reference=list(reference_text=NA_character_, pubmed_id=NA_character_))
-     }
-  pms = lapply( lapply(refl, lapply, function(x) unname(x$pubmed_id)), unlist )
-  DataFrame(metabolite=hmlist$name, disease=dnames, pmids=List(unname(pms)), accession=hmlist$accession)
+    dis = hmlist$diseases
+    if (is.character(dis) && length(dis) == 1 && dis == "\n  ") 
+        return(DataFrame())
+    dnames = as.character(sapply(dis, "[[", "name"))
+    refl = lapply(dis, function(x) x$references)
+    reflc = sapply(refl, class)
+    badrefl = which(reflc == "character")  # known failure
+    if (length(badrefl) > 0) {
+        for (i in badrefl) refl[[i]] = list(reference = list(reference_text = NA_character_, 
+            pubmed_id = NA_character_))
+    }
+    pms = lapply(lapply(refl, lapply, function(x) unname(x$pubmed_id)), unlist)
+    DataFrame(metabolite = hmlist$name, disease = dnames, pmids = List(unname(pms)), 
+        accession = hmlist$accession)
 }
 #' Constructor for HmdbEntry instance
 #' @param prefix character(1) URL of HMDB source accepting queries for XML documents
@@ -42,16 +45,17 @@ cat("Use diseases(), biofluids(), tissues() for more information.\n")
 #' @examples
 #' HmdbEntry()
 #' @export
-HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/",
-    id = "HMDB00001", keepFull=TRUE) {
-  imp = hmxToList(prefix=prefix, id=id)
-  tissues=unname(unlist(imp$tissue_locations))
-  if (tissues == "\n  ") tissues=NULL
-  ans = new("HmdbEntry", metabolite=imp$name, id=id,
-        diseases=.hmlistDiseaseDF(imp), tissues=tissues,
-        biofluids=unname(unlist(imp$biofluid_locations)))
-  if (keepFull) ans@store = imp
-  ans
+HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00001", 
+    keepFull = TRUE) {
+    imp = hmxToList(prefix = prefix, id = id)
+    tissues = unname(unlist(imp$tissue_locations))
+    if (tissues == "\n  ") 
+        tissues = NULL
+    ans = new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
+        tissues = tissues, biofluids = unname(unlist(imp$biofluid_locations)))
+    if (keepFull) 
+        ans@store = imp
+    ans
 }
 
 setGeneric("tissues", function(x) standardGeneric("tissues"))
