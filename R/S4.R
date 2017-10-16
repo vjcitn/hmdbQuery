@@ -49,7 +49,7 @@ HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00001
     keepFull = TRUE) {
     imp = hmxToList(prefix = prefix, id = id)
     tissues = unname(unlist(imp$tissue_locations))
-    if (tissues == "\n  ") 
+    if (tissues[1] == "\n  ") 
         tissues = NULL
     ans = new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
         tissues = tissues, biofluids = unname(unlist(imp$biofluid_locations)))
