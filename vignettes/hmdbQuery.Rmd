@@ -80,15 +80,17 @@ ab = buildPubMedAbst(xmlRoot(pm)[[1]])
 ab
 ```
 
-## Biofluid and tissue location metadata
+## Biospecimen and tissue location metadata
 
-There are arbitrarily many biofluid and tissue associations
+Note that pre HMDB v 4.0, biospecimens were called biofluids.
+
+There are arbitrarily many biospecimen and tissue associations
 provided for each HMDB entry.  We have direct accessors,
 and by default we capture all metadata, available through
 the `store` method.
 
 ```{r lkdee}
-biofluids(lk1)
+biospecimens(lk1)
 tissues(lk1)
 st = store(lk1)
 head(names(st))
