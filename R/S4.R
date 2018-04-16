@@ -25,9 +25,9 @@ setMethod("show", "HmdbEntry", function(object) {
     dis = hmlist$diseases
     if (is.character(dis) && length(dis) == 1 && dis == "\n  ") 
         return(DataFrame())
-    dnames = as.character(sapply(dis, "[[", "name"))
+    dnames = as.character(vapply(dis, "[[", "character", "name"))
     refl = lapply(dis, function(x) x$references)
-    reflc = sapply(refl, class)
+    reflc = vapply(refl, class, "character")
     badrefl = which(reflc == "character")  # known failure
     if (length(badrefl) > 0) {
         for (i in badrefl) refl[[i]] = list(reference = list(reference_text = NA_character_, 
