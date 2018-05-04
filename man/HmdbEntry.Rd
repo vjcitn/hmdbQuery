@@ -4,7 +4,7 @@
 \alias{HmdbEntry}
 \title{Constructor for HmdbEntry instance}
 \usage{
-HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00001",
+HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001",
   keepFull = TRUE)
 }
 \arguments{
