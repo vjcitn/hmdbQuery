@@ -45,7 +45,7 @@ setMethod("show", "HmdbEntry", function(object) {
 #' @examples
 #' HmdbEntry()
 #' @export
-HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00001", 
+HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
     keepFull = TRUE) {
     imp = hmxToList(prefix = prefix, id = id)
     tissues = unname(unlist(imp$tissue_locations))
