@@ -6,28 +6,28 @@
 #' @slot metabolite character(1) institutional name of metabolite
 #' @slot id HMDB identifier
 #' @slot diseases S4Vectors DataFrame instance listing associated diseases
-#' @slot biofluids S4Vectors DataFrame instance listing associated biofluids
+#' @slot biospecimens S4Vectors DataFrame instance listing associated biospecimens
 #' @slot tissues S4Vectors DataFrame instance listing associated tissues
 #' @slot store contains parsed XML
 #' @note Ontological tagging of diseases and other associated elements should be considered.
 #' @exportClass HmdbEntry
 setClass("HmdbEntry", representation(metabolite = "character", id = "character", 
-    diseases = "DataFrame", biofluids = "character", tissues = "character_OR_NULL", 
+    diseases = "DataFrame", biospecimens = "character", tissues = "character_OR_NULL", 
     store = "ANY"))
 setMethod("show", "HmdbEntry", function(object) {
     cat("HMDB metabolite metadata for ", object@metabolite, ":\n", sep = "")
     cat("There are ", nrow(object@diseases), " diseases annotated.\n", sep = "")
-    cat("Direct association reported for ", length(object@biofluids), " biofluids and ", 
+    cat("Direct association reported for ", length(object@biospecimens), " biospecimens and ", 
         length(object@tissues), " tissues.\n", sep = "")
-    cat("Use diseases(), biofluids(), tissues() for more information.\n")
+    cat("Use diseases(), biospecimens(), tissues() for more information.\n")
 })
 .hmlistDiseaseDF = function(hmlist) {
     dis = hmlist$diseases
     if (is.character(dis) && length(dis) == 1 && dis == "\n  ") 
         return(DataFrame())
-    dnames = as.character(sapply(dis, "[[", "name"))
+    dnames = as.character(vapply(dis, "[[", "character", "name"))
     refl = lapply(dis, function(x) x$references)
-    reflc = sapply(refl, class)
+    reflc = vapply(refl, class, "character")
     badrefl = which(reflc == "character")  # known failure
     if (length(badrefl) > 0) {
         for (i in badrefl) refl[[i]] = list(reference = list(reference_text = NA_character_, 
@@ -45,26 +45,26 @@ setMethod("show", "HmdbEntry", function(object) {
 #' @examples
 #' HmdbEntry()
 #' @export
-HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00001", 
+HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
     keepFull = TRUE) {
     imp = hmxToList(prefix = prefix, id = id)
     tissues = unname(unlist(imp$tissue_locations))
     if (tissues[1] == "\n  ") 
         tissues = NULL
     ans = new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
-        tissues = tissues, biofluids = unname(unlist(imp$biofluid_locations)))
+        tissues = tissues, biospecimens = unname(unlist(imp$biospecimen_locations)))
     if (keepFull) 
         ans@store = imp
     ans
 }
 
 setGeneric("tissues", function(x) standardGeneric("tissues"))
-setGeneric("biofluids", function(x) standardGeneric("biofluids"))
+setGeneric("biospecimens", function(x) standardGeneric("biospecimens"))
 setGeneric("diseases", function(x) standardGeneric("diseases"))
 setGeneric("store", function(x) standardGeneric("store"))
 
 .tissues = function(x) slot(x, "tissues")
-.biofluids = function(x) slot(x, "biofluids")
+.biospecimens = function(x) slot(x, "biospecimens")
 .diseases = function(x) slot(x, "diseases")
 .store = function(x) slot(x, "store")
 
@@ -88,15 +88,15 @@ setMethod("tissues", "HmdbEntry", function(x) .tissues(x))
 #' @export
 setMethod("diseases", "HmdbEntry", function(x) .diseases(x))
 
-#' extract biofluid associations
+#' extract biospecimen associations
 #' @param x HmdbEntry instance
-#' @aliases biofluids
+#' @aliases biospecimens
 #' @examples
 #' data(hmdb1)
-#' biofluids(hmdb1)
+#' biospecimens(hmdb1)
 #' @return character vector
 #' @export
-setMethod("biofluids", "HmdbEntry", function(x) .biofluids(x))
+setMethod("biospecimens", "HmdbEntry", function(x) .biospecimens(x))
 
 #' extract general association metadata in store slot
 #' @param x HmdbEntry instance

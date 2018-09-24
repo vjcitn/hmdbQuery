@@ -2,7 +2,7 @@
 
 export(HmdbEntry)
 exportClasses(HmdbEntry)
-exportMethods(biofluids)
+exportMethods(biospecimens)
 exportMethods(diseases)
 exportMethods(store)
 exportMethods(tissues)

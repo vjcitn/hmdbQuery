@@ -16,7 +16,7 @@ basic container for an HMDB metabolite entry
 
 \item{\code{diseases}}{S4Vectors DataFrame instance listing associated diseases}
 
-\item{\code{biofluids}}{S4Vectors DataFrame instance listing associated biofluids}
+\item{\code{biospecimens}}{S4Vectors DataFrame instance listing associated biospecimens}
 
 \item{\code{tissues}}{S4Vectors DataFrame instance listing associated tissues}
 

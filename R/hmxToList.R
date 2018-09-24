@@ -1,9 +1,9 @@
 .hmxPath = function(prefix="http://www.hmdb.ca/metabolites/",
-                   id="HMDB00001", ...) {
+                   id="HMDB0000001", ...) {
   sub("__PRE__", prefix, sub("%%ID%%", id, "__PRE__%%ID%%.xml") )
 }
 
-hmxToList = function (prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00001", 
+hmxToList = function (prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
     ...) 
 {
     requireNamespace("XML")
