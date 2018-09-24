@@ -37,15 +37,7 @@ setMethod("show", "HmdbEntry", function(object) {
     DataFrame(metabolite = hmlist$name, disease = dnames, pmids = List(unname(pms)), 
         accession = hmlist$accession)
 }
-#' Constructor for HmdbEntry instance
-#' @param prefix character(1) URL of HMDB source accepting queries for XML documents
-#' @param id character(1) HMDB identifier tag
-#' @param keepFull logical(1) indicating that entire parsed XML will be retained
-#' @return instance of HmdbEntry
-#' @examples
-#' HmdbEntry()
-#' @export
-HmdbEntry = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
+HmdbEntryOLD = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
     keepFull = TRUE) {
     imp = hmxToList(prefix = prefix, id = id)
     tissues = unname(unlist(imp$tissue_locations))
@@ -108,3 +100,44 @@ setMethod("biospecimens", "HmdbEntry", function(x) .biospecimens(x))
 #' @export
 setMethod("store", "HmdbEntry", function(x) .store(x))
 
+
+
+#' Constructor for HmdbEntry instance
+#' @param prefix character(1) URL of HMDB source accepting queries for XML documents
+#' @param id character(1) HMDB identifier tag
+#' @param keepFull logical(1) indicating that entire parsed XML will be retained
+#' @return instance of HmdbEntry, or a list
+#' @note The XML returned by hmdb.ca can have different structures
+#' for different metabolites.  If the mapping form XML to list
+#' is not as anticipated for a given metabolite, the xmlToList
+#' result is returned with a warning.  Such entries should be
+#' reported to the hmdbQuery maintainer for map revision.
+#' @examples
+#' HmdbEntry()
+#' @export
+HmdbEntry = function (prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
+    keepFull = TRUE) 
+{
+    imp = hmxToList(prefix = prefix, id = id)
+    nimp = names(imp)
+    if ("tissue_locations" %in% nimp) {
+      #update the list, old data model in use -- XML doesn't care!
+      imp$biological_properties = list()
+      imp$biological_properties$tissue_locations = imp$tissue_locations
+      imp$biological_properties$biospecimen_locations = imp$biospecimen_locations
+      }
+    tissues = unname(unlist(imp$biological_properties$tissue_locations))
+    if (tissues[1] == "\n  ") 
+        tissues = NULL
+    ans = try(new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
+        tissues = tissues, biospecimens = unname(unlist(imp$biological_properties$biospecimen_locations))))
+    if (inherits(ans, "try-error")) {
+      warning("The HMDB XML has an unexpected structure.  Please 
+report the HMDB ID to stvjc@channing.harvard.edu.  Returning a list of all 
+retrieved data.")
+      return(imp)
+      }
+    if (keepFull) 
+        ans@store = imp
+    ans
+}

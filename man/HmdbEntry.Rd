@@ -4,8 +4,8 @@
 \alias{HmdbEntry}
 \title{Constructor for HmdbEntry instance}
 \usage{
-HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001",
-  keepFull = TRUE)
+HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/",
+  id = "HMDB0000001", keepFull = TRUE)
 }
 \arguments{
 \item{prefix}{character(1) URL of HMDB source accepting queries for XML documents}
@@ -15,10 +15,17 @@ HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001",
 \item{keepFull}{logical(1) indicating that entire parsed XML will be retained}
 }
 \value{
-instance of HmdbEntry
+instance of HmdbEntry, or a list
 }
 \description{
 Constructor for HmdbEntry instance
+}
+\note{
+The XML returned by hmdb.ca can have different structures
+for different metabolites.  If the mapping form XML to list
+is not as anticipated for a given metabolite, the xmlToList
+result is returned with a warning.  Such entries should be
+reported to the hmdbQuery maintainer for map revision.
 }
 \examples{
 HmdbEntry()

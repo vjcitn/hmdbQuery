@@ -11,4 +11,4 @@ License: Artistic-2.0
 LazyLoad: yes
 biocViews: Metabolomics, Infrastructure
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
