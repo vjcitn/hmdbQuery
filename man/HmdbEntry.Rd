@@ -4,8 +4,11 @@
 \alias{HmdbEntry}
 \title{Constructor for HmdbEntry instance}
 \usage{
-HmdbEntry(prefix = "http://www.hmdb.ca/metabolites/",
-  id = "HMDB0000001", keepFull = TRUE)
+HmdbEntry(
+  prefix = "http://www.hmdb.ca/metabolites/",
+  id = "HMDB0000001",
+  keepFull = TRUE
+)
 }
 \arguments{
 \item{prefix}{character(1) URL of HMDB source accepting queries for XML documents}

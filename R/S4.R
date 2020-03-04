@@ -12,11 +12,11 @@
 #' @note Ontological tagging of diseases and other associated elements should be considered.
 #' @exportClass HmdbEntry
 setClass("HmdbEntry", representation(metabolite = "character", id = "character", 
-    diseases = "DataFrame", biospecimens = "character", tissues = "character_OR_NULL", 
+    diseases = "matrix", biospecimens = "character", tissues = "character_OR_NULL", 
     store = "ANY"))
 setMethod("show", "HmdbEntry", function(object) {
     cat("HMDB metabolite metadata for ", object@metabolite, ":\n", sep = "")
-    cat("There are ", nrow(object@diseases), " diseases annotated.\n", sep = "")
+    cat("There are ", ifelse(is.na(object@diseases[1,1]) && ncol(object@diseases)==1, 0, ncol(object@diseases)), " diseases annotated.\n", sep = "")
     cat("Direct association reported for ", length(object@biospecimens), " biospecimens and ", 
         length(object@tissues), " tissues.\n", sep = "")
     cat("Use diseases(), biospecimens(), tissues() for more information.\n")
@@ -24,18 +24,19 @@ setMethod("show", "HmdbEntry", function(object) {
 .hmlistDiseaseDF = function(hmlist) {
     dis = hmlist$diseases
     if (is.character(dis) && length(dis) == 1 && dis == "\n  ") 
-        return(DataFrame())
-    dnames = as.character(vapply(dis, "[[", "character", "name"))
-    refl = lapply(dis, function(x) x$references)
-    reflc = vapply(refl, class, "character")
-    badrefl = which(reflc == "character")  # known failure
-    if (length(badrefl) > 0) {
-        for (i in badrefl) refl[[i]] = list(reference = list(reference_text = NA_character_, 
-            pubmed_id = NA_character_))
-    }
-    pms = lapply(lapply(refl, lapply, function(x) unname(x$pubmed_id)), unlist)
-    DataFrame(metabolite = hmlist$name, disease = dnames, pmids = List(unname(pms)), 
-        accession = hmlist$accession)
+        return(matrix())
+    return(dis)  # better to transpose?
+#    dnames = as.character(vapply(dis, "[[", "character", "name"))
+#    refl = lapply(dis, function(x) x$references)
+#    reflc = vapply(refl, class, "character")
+#    badrefl = which(reflc == "character")  # known failure
+#    if (length(badrefl) > 0) {
+#        for (i in badrefl) refl[[i]] = list(reference = list(reference_text = NA_character_, 
+#            pubmed_id = NA_character_))
+#    }
+#    pms = lapply(lapply(refl, lapply, function(x) unname(x$pubmed_id)), unlist)
+#    DataFrame(metabolite = hmlist$name, disease = dnames, pmids = List(unname(pms)), 
+#        accession = hmlist$accession)
 }
 HmdbEntryOLD = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
     keepFull = TRUE) {

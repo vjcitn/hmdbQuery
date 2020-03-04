@@ -8,5 +8,7 @@ hmxToList = function (prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000
 {
     requireNamespace("XML")
     stopifnot(is.atomic(prefix), length(prefix)==1, is.atomic(id), length(id)==1)
-    xmlToList(.hmxPath(prefix = prefix, id = id, ...))
+    txt = readLines(.hmxPath(prefix=prefix, id=id, ...))
+    prs = xmlTreeParse(txt, asText=TRUE)
+    xmlToList(prs)
 }
