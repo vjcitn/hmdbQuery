@@ -4,7 +4,9 @@
 \name{hmdb_gene}
 \alias{hmdb_gene}
 \title{hmdb_gene: Sept 2017 extract from hmdb.ca of direct gene associations}
-\format{S4Vectors DataFrame}
+\format{
+S4Vectors DataFrame
+}
 \source{
 www.hmdb.ca xml
 }

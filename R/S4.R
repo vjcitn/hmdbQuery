@@ -42,7 +42,7 @@ HmdbEntryOLD = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB00
     keepFull = TRUE) {
     imp = hmxToList(prefix = prefix, id = id)
     tissues = unname(unlist(imp$tissue_locations))
-    if (tissues[1] == "\n  ") 
+    if (is.null(tissues) || tissues[1] == "\n  ") 
         tissues = NULL
     ans = new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
         tissues = tissues, biospecimens = unname(unlist(imp$biospecimen_locations)))
@@ -128,7 +128,7 @@ HmdbEntry = function (prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000
       imp$biological_properties$biospecimen_locations = imp$biospecimen_locations
       }
     tissues = unname(unlist(imp$biological_properties$tissue_locations))
-    if (tissues[1] == "\n  ") 
+    if (is.null(tissues) || tissues[1] == "\n  ") 
         tissues = NULL
     ans = try(new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
         tissues = tissues, biospecimens = unname(unlist(imp$biological_properties$biospecimen_locations))))

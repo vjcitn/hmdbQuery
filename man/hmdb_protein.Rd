@@ -4,7 +4,9 @@
 \name{hmdb_protein}
 \alias{hmdb_protein}
 \title{hmdb_protein: Sept 2017 extract from hmdb.ca of direct protein associations}
-\format{S4Vectors DataFrame}
+\format{
+S4Vectors DataFrame
+}
 \source{
 www.hmdb.ca xml
 }
