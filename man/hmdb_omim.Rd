@@ -4,7 +4,9 @@
 \name{hmdb_omim}
 \alias{hmdb_omim}
 \title{hmdb_omim: Sept 2017 extract from hmdb.ca of direct omim associations}
-\format{S4Vectors DataFrame}
+\format{
+S4Vectors DataFrame
+}
 \source{
 www.hmdb.ca xml
 }

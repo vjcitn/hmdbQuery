@@ -4,7 +4,9 @@
 \name{hmdb_disease}
 \alias{hmdb_disease}
 \title{hmdb_disease: Sept 2017 extract from hmdb.ca of direct disease associations}
-\format{S4Vectors DataFrame}
+\format{
+S4Vectors DataFrame
+}
 \source{
 www.hmdb.ca xml
 }

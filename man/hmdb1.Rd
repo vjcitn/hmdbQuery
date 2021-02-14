@@ -4,7 +4,9 @@
 \name{hmdb1}
 \alias{hmdb1}
 \title{hmdb1: demonstration HMDB entry}
-\format{HmdbEntry instance}
+\format{
+HmdbEntry instance
+}
 \source{
 www.hmdb.ca
 }
