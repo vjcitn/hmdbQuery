@@ -69,8 +69,8 @@ hmdb_disease
 Some HMDB metabolites have been mapped to diseases. 
 
 ```{r lkdis3}
-d1 = diseases(lk1) # matrix
-pmids = unlist(d1[3,1][[1]]["pubmed_id",])
+d1 = diseases(lk1) # data.frame
+pmids = unlist(d1["references", 5][[1]][2,])
 library(annotate)
 pm = pubmed(pmids[1])
 ab = buildPubMedAbst(xmlRoot(pm)[[1]])
