@@ -21,22 +21,18 @@ setMethod("show", "HmdbEntry", function(object) {
         length(object@tissues), " tissues.\n", sep = "")
     cat("Use diseases(), biospecimens(), tissues() for more information.\n")
 })
-.hmlistDiseaseDF = function(hmlist) {
-    dis = hmlist$diseases
-    if (is.character(dis) && length(dis) == 1 && dis == "\n  ") 
-        return(matrix())
-    return(dis)  # better to transpose?
-#    dnames = as.character(vapply(dis, "[[", "character", "name"))
-#    refl = lapply(dis, function(x) x$references)
-#    reflc = vapply(refl, class, "character")
-#    badrefl = which(reflc == "character")  # known failure
-#    if (length(badrefl) > 0) {
-#        for (i in badrefl) refl[[i]] = list(reference = list(reference_text = NA_character_, 
-#            pubmed_id = NA_character_))
-#    }
-#    pms = lapply(lapply(refl, lapply, function(x) unname(x$pubmed_id)), unlist)
-#    DataFrame(metabolite = hmlist$name, disease = dnames, pmids = List(unname(pms)), 
-#        accession = hmlist$accession)
+.hmlistDiseaseMatrix = function(hmlist) {
+  dis = hmlist$diseases
+  if ((is.character(dis) && length(dis) == 1 && dis == "\n  ") ||
+      is.null(dis)) 
+    return(matrix())
+  return(dis)
+}
+.biospecimen_locations = function(hmlist) {
+  locs = hmlist$biological_properties$biospecimen_locations
+  if (is.null(locs)) 
+    return(character())
+  return(unname(unlist(locs)))
 }
 HmdbEntryOLD = function(prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000001", 
     keepFull = TRUE) {
@@ -130,8 +126,8 @@ HmdbEntry = function (prefix = "http://www.hmdb.ca/metabolites/", id = "HMDB0000
     tissues = unname(unlist(imp$biological_properties$tissue_locations))
     if (is.null(tissues) || tissues[1] == "\n  ") 
         tissues = NULL
-    ans = try(new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseDF(imp), 
-        tissues = tissues, biospecimens = unname(unlist(imp$biological_properties$biospecimen_locations))))
+    ans = try(new("HmdbEntry", metabolite = imp$name, id = id, diseases = .hmlistDiseaseMatrix(imp), 
+        tissues = tissues, biospecimens = .biospecimen_locations(imp)))
     if (inherits(ans, "try-error")) {
       warning("The HMDB XML has an unexpected structure.  Please 
 report the HMDB ID to stvjc@channing.harvard.edu.  Returning a list of all 
